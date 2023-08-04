@@ -133,8 +133,16 @@ spec:
                   port: 3000
                   scheme: HTTP
               {{- end }}
+              {{- if .Values.grafana.extraVolumeMounts }}
+              volumeMounts:
+                {{- include "common.tplvalues.render" (dict "value" .Values.grafana.extraVolumeMounts "context" $) | nindent 6 }}
+              {{- end }}
             {{- if .Values.grafana.sidecars }}
             {{- include "common.tplvalues.render" ( dict "value" .Values.grafana.sidecars "context" $) | nindent 12 }}
+            {{- end }}
+            {{- if .Values.grafana.extraVolumes }}
+            volumes:
+              {{- include "common.tplvalues.render" (dict "value" .Values.grafana.extraVolumes "context" $) | nindent 6 }}
             {{- end }}
     {{- if .Values.grafana.tolerations }}
     tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.grafana.tolerations "context" $) | nindent 6 }}
@@ -144,14 +152,6 @@ spec:
     {{- end }}
     {{- if .Values.grafana.updateStrategy }}
     strategy: {{ toYaml .Values.grafana.updateStrategy | nindent 6 }}
-    {{- end }}
-    {{- if .Values.grafana.extraVolumeMounts }}
-    extraVolumeMounts:
-      {{- include "common.tplvalues.render" (dict "value" .Values.grafana.extraVolumeMounts "context" $) | nindent 6 }}
-    {{- end }}
-    {{- if .Values.grafana.extraVolumes }}
-    extraVolumes:
-      {{- include "common.tplvalues.render" (dict "value" .Values.grafana.extraVolumes "context" $) | nindent 6 }}
     {{- end }}
   {{- if .Values.grafana.ingress.enabled }}
   ingress:
